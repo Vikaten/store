@@ -1,8 +1,8 @@
-import { Component, Input } from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import { MatCard } from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
 import { CurrencyPipe, NgClass, NgIf } from '@angular/common';
-import { Product } from '../../../../models/product.model';
+import { IProduct } from '../../../../models/product.model';
 
 @Component({
   selector: 'app-product-box',
@@ -12,7 +12,7 @@ import { Product } from '../../../../models/product.model';
 })
 export class ProductBoxComponent {
   @Input() fullWidthMode = false;
-  product: Product | undefined = {
+  product: IProduct | undefined = {
     id: 1,
     title: 'Snikers',
     price: 150,
@@ -20,8 +20,9 @@ export class ProductBoxComponent {
     description: 'fdmkfmckmskmcsd',
     imageUrl: 'https://i.postimg.cc/Vrc26069/dress.jpg'
   };
+  @Output() addToCart = new EventEmitter();
 
   onAddToCart() {
-
+    this.addToCart.emit(this.product);
   }
 }

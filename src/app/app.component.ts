@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { MatList, MatListItem } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatMenuModule } from '@angular/material/menu';
@@ -13,6 +12,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { HeaderComponent } from './components/header/header.component';
+import {ICart} from './models/cart.model';
+import {CartService} from './services/cart.service';
 
 @Component({
   selector: 'app-root',
@@ -34,6 +35,15 @@ import { HeaderComponent } from './components/header/header.component';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
-  title = 'store';
+export class AppComponent implements OnInit {
+  cart: ICart = {items: []};
+
+  constructor(private cartService: CartService) {
+  }
+
+  ngOnInit(): void {
+  this.cartService.cart.subscribe((_cart) => {
+    this.cart = _cart;
+    })
+  }
 }
