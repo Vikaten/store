@@ -23,7 +23,4 @@ import { CurrencyPipe } from '@angular/common';
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
-  h() {
-    console.log('header component');
-  }
 }
