@@ -20,7 +20,6 @@ export class ProductBoxComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.product?.image);
   }
 
   protected readonly print = print;

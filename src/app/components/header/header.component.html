@@ -1,12 +1,17 @@
 <mat-toolbar class="max-w-7x1 mx-auto border-x justify-between border">
   <a routerLink="home" href="">Code with Sloba store</a>
-  <button mat-icon-button [matMenuTriggerFor]="menu">
-    <mat-icon aria-hidden="false" [matBadge]="itemsQuantity"
-              [matBadgeHidden]="!itemsQuantity"
-              matBadgeColor="warn"
+  <div>
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon aria-hidden="false" [matBadge]="itemsQuantity"
+                [matBadgeHidden]="!itemsQuantity"
+                matBadgeColor="warn"
       >shopping_cart
-    </mat-icon>
-  </button>
+      </mat-icon>
+    </button>
+    <button routerLink="/login" >
+      <mat-icon>account_circle</mat-icon>
+    </button>
+  </div>
   <mat-menu #menu="matMenu">
     <div class="p-3 divide-y divide-solid">
       <div class="pb-3 flex justify-between">

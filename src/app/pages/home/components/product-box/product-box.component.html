@@ -17,9 +17,8 @@
       }"
     >
       <div>
-        <h5>{{product?.category}}</h5>
-        <p class="truncate hover:whitespace-normal">{{product.title}}</p>
-        <p *ngIf="fullWidthMode">{{product.description}}</p>
+        <h5>{{ product.category_name }}</h5>
+        <p class="truncate hover:whitespace-normal">{{product.product_name}}</p>
       </div>
       <div class="flex justify-between px-8">
         <span class="text-red-400">{{ product.price | currency }}</span>

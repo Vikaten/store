@@ -1,0 +1,15 @@
+<h1>Welcome to web shop!</h1>
+<form class="wrapper" [formGroup]="loginForm" (ngSubmit)="login()">
+  <mat-form-field class="input">
+    <mat-label>Email</mat-label>
+    <input matInput formControlName="email">
+  </mat-form-field>
+  <mat-form-field class="input">
+    <mat-label>Password</mat-label>
+    <input matInput formControlName="password">
+  </mat-form-field>
+  <button mat-raised-button>Submit</button>
+  <span>Don't have an account?
+        <a mat-button routerLink="/signup">Sign in</a>
+  </span>
+</form>

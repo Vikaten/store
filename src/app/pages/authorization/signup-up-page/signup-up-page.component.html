@@ -1,0 +1,24 @@
+<h1>Welcome to web shop!</h1>
+<form class="wrapper" [formGroup]="signUpForm" (ngSubmit)="signUp()">
+  <mat-form-field class="input">
+    <mat-label>Name</mat-label>
+    <input matInput formControlName="name">
+  </mat-form-field>
+  <mat-form-field class="input">
+    <mat-label>Birthday</mat-label>
+    <input matInput formControlName="birthday">
+  </mat-form-field>
+  <mat-form-field class="input">
+    <mat-label>Number</mat-label>
+    <input matInput  formControlName="number">
+  </mat-form-field>
+  <mat-form-field class="input">
+    <mat-label>Email</mat-label>
+    <input matInput formControlName="email">
+  </mat-form-field>
+  <mat-form-field class="input">
+    <mat-label>Password</mat-label>
+    <input matInput formControlName="password">
+  </mat-form-field>
+  <button mat-raised-button>Submit</button>
+</form>

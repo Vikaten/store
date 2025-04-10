@@ -49,7 +49,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   getProducts() {
     this.productsSubscription = this.storeService.getAllProducts(this.count, this.sort, this.category)
-      .subscribe(_products => this.products = _products);
+      .subscribe(_products => {
+        this.products = _products;
+      });
   }
 
   onColumnsCountChange(colsNum: number): void {
@@ -65,7 +67,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   onAddToCart(product: IProduct): void {
     this.cartService.addToCart({
       product: product.image,
-      name: product.title,
+      name: product.product_name,
       price: product.price,
       quantity: 1,
       id: product.id,
