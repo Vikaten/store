@@ -4,6 +4,7 @@ import {MatAnchor, MatButton} from '@angular/material/button';
 import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
+import {IResponceAuthWithMess} from '../../../models/auth.model'
 
 @Component({
   selector: 'app-login-page',
@@ -24,7 +25,6 @@ import {HttpClient} from '@angular/common/http';
 
 export class LoginPageComponent implements OnInit {
   public loginForm!: FormGroup;
-  public usersList: string[] = [];
   constructor(private formBuilder: FormBuilder, private http: HttpClient, private router: Router) { }
 
   ngOnInit() {
@@ -41,12 +41,17 @@ export class LoginPageComponent implements OnInit {
       password: formData.password,
     };
 
-    this.http.post("http://localhost:3000/api/login", payload)
+    this.http.post<IResponceAuthWithMess>("http://localhost:3000/api/login", payload)
       .subscribe({
         next: res => {
           alert('Successful!');
           this.loginForm.reset();
-          this.router.navigate(['/home']);
+          if (res.user.role === "admin") {
+            this.router.navigate(['/database']);
+          }
+          else {
+            this.router.navigate(['/home']);
+          }
         },
         error: err => {
           if (err.status === 401) {

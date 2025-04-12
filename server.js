@@ -142,6 +142,17 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+app.get('/api/:type', async (req, res) => {
+  const table = req.params.type;
+  try {
+    let pool = await sql.connect(dbConfig);
+    let result = await pool.request().query(`SELECT * FROM ${table}`);
+    res.json(result.recordset);
+  } catch (err) {
+    console.error('Request error:', err);
+    res.status(500).send('Server error: ' + err.message);
+  }
+});
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

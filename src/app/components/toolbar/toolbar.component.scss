@@ -1,0 +1,19 @@
+.toolbar-wrapper {
+  width: 80px;
+  background-color: #b3b3b3;
+  height: 100%;
+}
+
+ul {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   gap: 20px;
+   padding-top: 20px;
+}
+
+li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
