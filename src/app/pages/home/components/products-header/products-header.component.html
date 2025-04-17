@@ -11,17 +11,6 @@
       </mat-menu>
     </div>
     <div class="flex items-center">
-      <div>
-        <button mat-button [matMenuTriggerFor]="menu">
-          Show {{ itemsShowCount }}
-          <mat-icon>expand_more</mat-icon>
-        </button>
-        <mat-menu #menu="matMenu">
-          <button (click)="onItemsUpdates(12)" mat-menu-item>12</button>
-          <button (click)="onItemsUpdates(24)" mat-menu-item>24</button>
-          <button (click)="onItemsUpdates(36)" mat-menu-item>36</button>
-        </mat-menu>
-      </div>
       <button (click)="onColumnsUpdated(1)">
         <mat-icon>view_list</mat-icon>
       </button>

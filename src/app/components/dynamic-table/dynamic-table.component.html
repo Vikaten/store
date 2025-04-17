@@ -1,5 +1,8 @@
-<div>
+<div class="wrapper">
   <h2>{{this.currentTable}}</h2>
+  <div class="icons">
+    <mat-icon (click)="addNewNote()">add</mat-icon>
+  </div>
   <table mat-table [dataSource]="tableData">
     <ng-container *ngFor="let column of columns" [matColumnDef]="column">
       <th mat-header-cell *matHeaderCellDef> {{ column }} </th>

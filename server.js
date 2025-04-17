@@ -33,9 +33,11 @@ app.get('/api/products', async (req, res) => {
     let result = await pool.request().query(`
       SELECT
         p.product_id,
+        p.category_id,
         p.product_name,
+        p.size,
+        p.sex,
         p.price,
-        c.category_name,
         p.image
       FROM Products p
       JOIN Category c ON p.category_id = c.category_id
@@ -63,20 +65,27 @@ app.get('/api/products/categories', async (req, res) => {
 
 app.get('/api/products/category/:categoryName', async (req, res) => {
   const { categoryName } = req.params;
+  const { sort = 'asc', limit = 100 } = req.query; // default значения
+
+  const sortOrder = sort.toLowerCase() === 'desc' ? 'DESC' : 'ASC';
+  const limitNumber = parseInt(limit, 10);
+
   try {
     let pool = await sql.connect(dbConfig);
     let result = await pool.request()
       .input('categoryName', sql.NVarChar, categoryName)
       .query(`
-        SELECT
+        SELECT TOP (${limitNumber})
           p.product_id,
           p.product_name,
-          p.price,
-          c.category_name,
-          p.image
+               p.price,
+               p.sex,
+               c.category_name,
+               p.image
         FROM Products p
-        JOIN Category c ON p.category_id = c.category_id
+               JOIN Category c ON p.category_id = c.category_id
         WHERE c.category_name = @categoryName
+        ORDER BY p.price ${sortOrder}
       `);
 
     res.json(result.recordset);
@@ -85,6 +94,7 @@ app.get('/api/products/category/:categoryName', async (req, res) => {
     res.status(500).send('Server error: ' + err.message);
   }
 });
+
 
 app.post('/signupUsersList', async (req, res) => {
   const { name, birthday, number, email, password } = req.body;
@@ -153,6 +163,25 @@ app.get('/api/:type', async (req, res) => {
     res.status(500).send('Server error: ' + err.message);
   }
 });
+
+app.post('/api/:type', async (req, res) => {
+  const table = req.params.type;
+  const data = req.body;
+
+  try {
+    let pool = await sql.connect(dbConfig);
+    const keys = Object.keys(data);
+    const values = keys.map(key => `'${data[key]}'`).join(', ');
+    const columns = keys.join(', ');
+    const query = `INSERT INTO ${table} (${columns}) VALUES (${values})`;
+    await pool.request().query(query);
+    res.status(200).json({ message: `Data inserted into ${table}` });
+  } catch (err) {
+    console.error('Insert error:', err);
+    res.status(500).send('Server error: ' + err.message);
+  }
+});
+
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

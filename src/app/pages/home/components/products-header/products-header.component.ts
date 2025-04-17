@@ -22,11 +22,6 @@ export class ProductsHeaderComponent {
     this.sortChange.emit(newSort);
   }
 
-  onItemsUpdates(count: number) {
-    this.itemsShowCount = count;
-    this.itemCountChange.emit(count);
-  }
-
   onColumnsUpdated(colsNum: number) {
     this.columnsCountChange.emit(colsNum);
   }

@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>Add new note</h2>
+<form class="form" [formGroup]="form" (ngSubmit)="submit()">
+  <mat-form-field class="field" *ngFor="let column of this.displayedColumns">
+<!--    <ng-container *ngIf="column !== 'client_id'">-->
+      <input matInput placeholder="{{column}}" [formControlName] = "column">
+<!--    </ng-container>-->
+  </mat-form-field>
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close [mat-dialog-close]="form.value" [disabled]="form.invalid">Add</button>
+  <button mat-button [mat-dialog-close]="true">Cancel</button>
+</mat-dialog-actions>
+</form>
