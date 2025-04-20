@@ -63,7 +63,6 @@ export class DynamicTableComponent implements OnInit {
     this.http.get<any[]>(`http://localhost:3000/api/${type}`).subscribe({
       next: data => {
         this.tableData = data;
-        console.log('💾 Данные с сервера:', data);
         this.columns = data.length ? Object.keys(data[0]) : [];
       },
       error: err => {
@@ -89,20 +88,19 @@ export class DynamicTableComponent implements OnInit {
       height: 'auto',
       width: '800px',
       data: {
+        rowData: null,
         columns: this.columns,
       },
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log("res" + result)
       if (result) {
-        const payload = {
-            ...result
-        };
-        console.log(result);
-        this.sendData(this.currentTable, payload);
+        const { action, data } = result;
+        if (action === 'add') {
+          this.addData(this.currentTable, data);
+        }
       }
-    })
+    });
   }
 
   sendData(type: string, payload: any) {
@@ -122,5 +120,95 @@ export class DynamicTableComponent implements OnInit {
           console.error(err);
         }
       });
+  }
+
+  onClick(row: any) {
+    const dialogRef = this.dialog.open(FormComponent, {
+      height: 'auto',
+      width: '800px',
+      data: {
+        rowData: row,
+        columns: this.columns,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const payload = {
+          ...row,
+          ...result
+        }
+        if (payload.action === 'edit') {
+          this.updateData(this.currentTable, payload);
+        }
+        else if (payload.action === 'delete') {
+          this.deleteData(this.currentTable, payload);
+        }
+      }
+    });
+  }
+
+  addData(currentTable: string, payload: any) {
+    this.http.post(`http://localhost:3000/api/${currentTable}`, payload)
+      .subscribe({
+        next: res => {
+          alert('Added successfully!');
+          this.fetchData(currentTable);
+        },
+        error: err => {
+          alert('Add failed');
+          console.error(err);
+        }
+      });
+  }
+
+  updateData(currentTable: string, payload: any) {
+    const id = payload.client_id || payload.product_id || payload.supplier_id || payload.worker_id;
+    this.http.put(`http://localhost:3000/api/${currentTable}/${id}`, payload.data)
+    .subscribe({
+      next: res => {
+        alert('Updated successfully!');
+        this.fetchData(currentTable);
+      },
+      error: err => {
+        alert('Update failed');
+        console.error(err);
+      }
+    });
+  }
+
+  onDelete(row: any) {
+    const dialogRef = this.dialog.open(FormComponent, {
+      height: 'auto',
+      width: '800px',
+      data: {
+        rowData: row,
+        columns: this.columns,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const payload = {
+          ...row
+        }
+        this.deleteData(this.currentTable, payload);
+      }
+    });
+  }
+
+  deleteData(currentTable: string, payload: any) {
+    const id = payload.client_id || payload.product_id || payload.supplier_id || payload.worker_id;
+    this.http.delete(`http://localhost:3000/api/${currentTable}/${id}`, payload)
+    .subscribe({
+      next: res => {
+        alert('Deleted successfully!');
+        this.fetchData(currentTable);
+      },
+      error: err => {
+        alert('Deleted failed');
+        console.error(err);
+      }
+    });
   }
 }

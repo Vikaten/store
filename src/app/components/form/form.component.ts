@@ -13,7 +13,6 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {NgForOf, NgIf} from '@angular/common';
 import { MatFormFieldModule } from "@angular/material/form-field";
 
-
 @Component({
   selector: 'app-form',
   standalone: true,
@@ -21,7 +20,6 @@ import { MatFormFieldModule } from "@angular/material/form-field";
     MatDialogTitle,
     MatDialogActions,
     MatButton,
-    MatDialogClose,
     MatFormField,
     MatInput,
     ReactiveFormsModule,
@@ -36,28 +34,35 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 export class FormComponent implements OnInit {
   form!: FormGroup;
   columns: string[];
+  action: string;
+  rowData: any;
   displayedColumns: string[] = [];
 
    constructor(
-     public dialog: MatDialog,
      public formBuilder: FormBuilder,
+     public dialogRef: MatDialogRef<FormComponent>,
      @Inject(MAT_DIALOG_DATA) data: any) {
      this.columns = data.columns;
+     this.rowData = data.rowData;
+     this.action = data.action;
    }
 
   ngOnInit() {
     const group: any = {};
     const noIncludesFields = ['product_id', 'supplier_id', 'client_id', 'worker_id'];
     this.displayedColumns = this.columns.filter(column => !noIncludesFields.includes(column));
-    console.log(this.displayedColumns);
     this.displayedColumns.forEach(col => {
-        group[col] = ['',Validators.required];
+      const value = this.rowData ? this.rowData[col] : '';
+      group[col] = [value, Validators.required];
     });
-
     this.form = this.formBuilder.group(group);
   }
 
-  submit() {
-    console.log('📝 Form submitted:', this.form.value);
+  submit(action: string) {
+    const result = {
+      action: action,
+      data: this.form.value
+    };
+    this.dialogRef.close(result);
   }
 }

@@ -182,6 +182,70 @@ app.post('/api/:type', async (req, res) => {
   }
 });
 
+app.get('/api/:type/:id', async (req, res) => {
+  const table = req.params.type;
+  const id = req.params.id;
+  const currentId = table.slice(0, -1) + '_id';
+  console.log(currentId);
+  const validTables = ['clients', 'products', 'suppliers', 'workers'];
+  if (!validTables.includes(table)) {
+    return res.status(400).json({ message: 'Invalid table name' });
+  }
+
+  try {
+    let pool = await sql.connect(dbConfig);
+    const query = `SELECT * FROM ${table} WHERE ${currentId} = ${id}`;
+    console.log('Executing query:', query);
+    const result = await pool.request().query(query);
+    if (result.recordset.length > 0) {
+      res.status(200).json(result.recordset[0]); // Возвращаем найденную запись
+    } else {
+      res.status(404).json({ message: `${table.slice(0, -1)} not found` }); // Если запись не найдена
+    }
+  } catch (err) {
+    console.error('Error fetching data:', err);
+    res.status(500).send('Server error: ' + err.message);
+  }
+});
+
+
+app.put('/api/:type/:id', async (req, res) => {
+  const table = req.params.type;
+  const id = req.params.id;
+  const currentId = table.slice(0, -1) + '_id';
+  const data = req.body;
+  try {
+    let pool = await sql.connect(dbConfig);
+    const keys = Object.keys(data).filter(key => key !== currentId);
+    console.log('keys ' + JSON.stringify(keys))
+    const updates = keys.map(key => `${key} = '${data[key]}'`).join(', ');
+    console.log('updates ' + updates)
+    const query = `UPDATE ${table} SET ${updates} WHERE ${currentId} = ${id}`;
+    console.log('Executing query:', query);
+    await pool.request().query(query);
+    res.status(200).json({ message: `Data updated in ${table}` });
+  } catch (err) {
+    console.error('Update error:', err);
+    res.status(500).send('Server error: ' + err.message);
+  }
+});
+
+app.delete('/api/:type/:id', async (req, res) => {
+  const table = req.params.type;
+  const id = req.params.id;
+  const currentId = table.slice(0, -1) + '_id';
+  const data = req.body;
+  try {
+    let pool = await sql.connect(dbConfig);
+    const query = `DELETE from ${table} WHERE ${currentId} = ${id}`;
+    console.log('Executing query:', query);
+    await pool.request().query(query);
+    res.status(200).json({ message: `Data delete in ${table}` });
+  } catch (err) {
+    console.error('Delete error:', err);
+    res.status(500).send('Server error: ' + err.message);
+  }
+});
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

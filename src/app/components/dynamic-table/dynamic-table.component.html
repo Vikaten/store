@@ -6,7 +6,7 @@
   <table mat-table [dataSource]="tableData">
     <ng-container *ngFor="let column of columns" [matColumnDef]="column">
       <th mat-header-cell *matHeaderCellDef> {{ column }} </th>
-      <td mat-cell *matCellDef="let row"> {{ formatCell(row[column], column) }} </td>
+      <td mat-cell *matCellDef="let row; let i = index" (click)="onClick(row)"> {{ formatCell(row[column], column) }} </td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="columns"></tr>
     <tr mat-row *matRowDef="let row; columns: columns;"></tr>
